@@ -1,30 +1,778 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Candle Blow</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
-    />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
-  </head>
-  <body>
-    <div class="candle-count-display">
-      Candles on the Cake: <span id="candleCount">0</span>
-    </div>
-    <div class="cake">
-      <div class="plate"></div>
-      <div class="layer layer-bottom"></div>
-      <div class="layer layer-middle"></div>
-      <div class="layer layer-top"></div>
-      <div class="icing"></div>
-      <div class="drip drip1"></div>
-      <div class="drip drip2"></div>
-      <div class="drip drip3"></div>
-    </div>
-    <script src="script.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Rick's Interdimensional Birthday Cake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+  />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    
+    @font-face {
+      font-family: 'Get Schwifty';
+      src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff') format('woff');
+    }
+    
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: black;
+      min-height: 100vh;
+      font-family: 'Orbitron', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      font-size: 0.9vw;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(102, 186, 79, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(8, 186, 227, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 247, 101, 0.1) 0%, transparent 50%);
+      animation: portal-shimmer 8s ease-in-out infinite;
+    }
+
+    @keyframes portal-shimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .title {
+      color: #08BAE3;
+      font-family: 'Get Schwifty', 'Orbitron', monospace;
+      font-size: 3em;
+      font-weight: 900;
+      text-shadow: 0 0 20px #08BAE3, 2px 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: glow-pulse 2s ease-in-out infinite;
+      -webkit-text-stroke: 1px rgba(0,0,0,0.5);
+      z-index: 50;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 20px #08BAE3, 2px 2px 4px rgba(0,0,0,0.8); }
+      50% { text-shadow: 0 0 30px #08BAE3, 0 0 40px #08BAE3, 2px 2px 4px rgba(0,0,0,0.8); }
+    }
+
+    .subtitle {
+      color: #FFF765;
+      font-size: 14px;
+      margin-bottom: 20px;
+      font-style: italic;
+      opacity: 0.9;
+      text-shadow: 0 0 10px #FFF765;
+    }
+
+    .candle-count-display {
+      color: #08BAE3;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #08BAE3, 2px 2px 4px rgba(0,0,0,0.5);
+      background: rgba(8, 186, 227, 0.1);
+      padding: 10px 20px;
+      border: 2px solid #08BAE3;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .cake {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      margin: 50px auto;
+      cursor: pointer;
+      filter: drop-shadow(0 10px 25px rgba(102, 186, 79, 0.3));
+    }
+
+    .plate {
+      position: absolute;
+      bottom: -20px;
+      left: -30px;
+      width: 360px;
+      height: 30px;
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      border-radius: 50%;
+      box-shadow: 
+        0 5px 15px rgba(0,0,0,0.5),
+        inset 0 2px 10px rgba(255,255,255,0.2),
+        0 0 20px rgba(8, 186, 227, 0.2);
+      border: 2px solid #08BAE3;
+    }
+
+    .layer {
+      position: absolute;
+      border: 2px solid #08BAE3;
+    }
+
+    .layer-bottom {
+      bottom: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(135deg, #2d1b69, #1a0e42);
+      border-radius: 15px;
+      box-shadow: 
+        0 5px 15px rgba(0,0,0,0.5),
+        inset 0 2px 10px rgba(102, 186, 79, 0.2);
+    }
+
+    .layer-middle {
+      bottom: 60px;
+      left: 10px;
+      width: calc(100% - 20px);
+      height: 60px;
+      background: linear-gradient(135deg, #4a3c8c, #2d1b69);
+      border-radius: 12px;
+      box-shadow: 
+        0 3px 10px rgba(0,0,0,0.4),
+        inset 0 2px 8px rgba(102, 186, 79, 0.15);
+    }
+
+    .layer-top {
+      bottom: 100px;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: 40px;
+      background: linear-gradient(135deg, #6b5b95, #4a3c8c);
+      border-radius: 10px;
+      box-shadow: 
+        0 2px 8px rgba(0,0,0,0.3),
+        inset 0 2px 6px rgba(102, 186, 79, 0.1);
+    }
+
+    .icing {
+      position: absolute;
+      top: 55px;
+      left: 15px;
+      right: 15px;
+      height: 25px;
+      background-color: #66BA4F;
+      border-radius: 15px 15px 50% 50%;
+      box-shadow: 0px 0px 40px 10px #448C3F;
+      border: 1px solid #08BAE3;
+      animation: portal-fluid-flow 3s ease-in-out infinite;
+      background: 
+        radial-gradient(circle at 20% 30%, #FDFEB4 3%, transparent 3%),
+        radial-gradient(circle at 80% 70%, #FFFFD5 2%, transparent 2%),
+        radial-gradient(circle at 60% 20%, #FFF8C5 2.5%, transparent 2.5%),
+        radial-gradient(circle at 30% 80%, #FAEB7B 2%, transparent 2%),
+        radial-gradient(circle at 70% 40%, #E5E051 1.5%, transparent 1.5%),
+        radial-gradient(circle at 40% 60%, #EAF157 1%, transparent 1%),
+        radial-gradient(circle at 85% 30%, #FFFE9C 1.5%, transparent 1.5%),
+        radial-gradient(circle at 15% 60%, #E9E072 1%, transparent 1%),
+        radial-gradient(circle at 50% 50%, transparent 70%, #43A93E 70%),
+        radial-gradient(circle at 45% 55%, transparent 65%, #1A9042 65%),
+        radial-gradient(circle at 55% 45%, transparent 60%, #399C49 60%),
+        radial-gradient(circle at 50% 50%, #66BA4F 100%, #66BA4F 100%);
+      /* Create uneven bottom edge for more natural icing flow */
+      clip-path: polygon(
+        0% 0%, 100% 0%, 100% 75%,
+        95% 80%, 90% 75%, 85% 85%, 80% 75%, 75% 80%, 70% 75%,
+        65% 85%, 60% 75%, 55% 80%, 50% 75%, 45% 85%, 40% 75%,
+        35% 80%, 30% 75%, 25% 85%, 20% 75%, 15% 80%, 10% 75%,
+        5% 85%, 0% 75%
+      );
+    }
+
+    @keyframes portal-fluid-flow {
+      0%, 100% { 
+        box-shadow: 0px 0px 40px 10px #448C3F;
+        background-color: #66BA4F;
+      }
+      50% { 
+        box-shadow: 0px 0px 40px 10px #08BAE3;
+        background-color: #43A93E;
+      }
+    }
+
+    .drip {
+      position: absolute;
+      margin-top: -10px;
+      background: linear-gradient(to bottom, #66BA4F 0%, #43A93E 50%, #08BAE3 100%);
+      border-radius: 0 0 50% 50%;
+      box-shadow: 0 0 8px rgba(102, 186, 79, 0.5), 0 0 12px rgba(8, 186, 227, 0.3);
+      border: 1px solid #08BAE3;
+      border-top: none;
+      animation: drip-glow 2s ease-in-out infinite alternate;
+      /* Make drips more organic with custom shapes */
+    }
+
+    .drip::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 8px;
+      background: linear-gradient(to bottom, #66BA4F, transparent);
+      border-radius: 50%;
+    }
+
+    .drip::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 40%;
+      background: radial-gradient(ellipse, #08BAE3 30%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    @keyframes drip-glow {
+      0% { 
+        background: linear-gradient(to bottom, #66BA4F, #08BAE3);
+        box-shadow: 0px 0px 20px 5px #448C3F;
+      }
+      100% { 
+        background: linear-gradient(to bottom, #08BAE3, #66BA4F);
+        box-shadow: 0px 0px 20px 5px #08BAE3;
+      }
+    }
+
+    .drip1 {
+      left: 25px;
+      top: 80px;
+      height: 35px;
+      width: 8px;
+      animation-delay: 0s;
+      border-radius: 4px 2px 60% 40%;
+    }
+
+    .drip2 {
+      left: 75px;
+      top: 82px;
+      height: 22px;
+      width: 12px;
+      animation-delay: 0.5s;
+      border-radius: 6px 3px 45% 55%;
+    }
+
+    .drip3 {
+      left: 125px;
+      top: 78px;
+      height: 42px;
+      width: 7px;
+      animation-delay: 1s;
+      border-radius: 3px 4px 50% 50%;
+    }
+
+    .drip4 {
+      left: 175px;
+      top: 83px;
+      height: 18px;
+      width: 10px;
+      animation-delay: 1.5s;
+      border-radius: 5px 2px 40% 60%;
+    }
+
+    .drip5 {
+      right: 35px;
+      top: 81px;
+      height: 28px;
+      width: 9px;
+      animation-delay: 0.3s;
+      border-radius: 4px 5px 55% 45%;
+    }
+
+    .drip6 {
+      right: 70px;
+      top: 79px;
+      height: 25px;
+      width: 6px;
+      animation-delay: 0.8s;
+      border-radius: 3px 3px 50% 50%;
+    }
+
+    .drip7 {
+      left: 50px;
+      top: 84px;
+      height: 15px;
+      width: 5px;
+      animation-delay: 1.2s;
+      border-radius: 2px 3px 60% 40%;
+    }
+
+    .drip8 {
+      right: 100px;
+      top: 85px;
+      height: 20px;
+      width: 7px;
+      animation-delay: 0.7s;
+      border-radius: 3px 4px 45% 55%;
+    }
+
+    .candle {
+      position: absolute;
+      width: 8px;
+      height: 40px;
+      background: linear-gradient(to bottom, #23bcc4, #3756e0);
+      border-radius: 2px;
+      transform: translateX(-50%);
+      box-shadow: 
+        0 2px 5px rgba(0,0,0,0.4),
+        inset 0 1px 3px rgba(255,255,255,0.3),
+        0 0 10px rgba(102, 186, 79, 0.6);
+      transition: all 0.3s ease;
+      border: 1px solid #372bb7;
+    }
+
+    .candle.out {
+      opacity: 0.3;
+      filter: grayscale(100%);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .flame {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 15px;
+      background: radial-gradient(circle, #FFF765 0%, #e65117 40%, #66BA4F 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: rick-flicker 0.4s ease-in-out infinite alternate;
+      box-shadow: 
+        0 0 15px #FFF765, 
+        0 0 25px #e65117,
+        0 0 35px rgba(102, 186, 79, 0.3);
+    }
+
+    .candle.out .flame {
+      display: none;
+    }
+
+    @keyframes rick-flicker {
+      0% { 
+        transform: translateX(-50%) scale(1) rotate(-2deg);
+        background: radial-gradient(circle, #FFF765 0%, #08BAE3 40%, #66BA4F 100%);
+      }
+      100% { 
+        transform: translateX(-50%) scale(1.15) rotate(2deg);
+        background: radial-gradient(circle, #66BA4F 0%, #FFF765 40%, #08BAE3 100%);
+      }
+    }
+
+    .instructions {
+      color: #08BAE3;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 16px;
+      opacity: 0.9;
+      text-shadow: 0 0 10px #08BAE3;
+      background: rgba(8, 186, 227, 0.1);
+      padding: 15px 25px;
+      border: 1px solid #08BAE3;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      max-width: 600px;
+    }
+
+    .rick-quote {
+      color: #FFF765;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      font-style: italic;
+      text-shadow: 0 0 10px #FFF765;
+      animation: quote-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes quote-glow {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; text-shadow: 0 0 15px #FFF765, 0 0 25px #FFF765; }
+    }
+
+    .portal-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background-color: #66BA4F;
+      box-shadow: 0px 0px 40px 10px #448C3F;
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: portal-rotate 10s linear infinite;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 77% 80%, #FDFEB4 2.5%, transparent 2.5%),
+        radial-gradient(circle at 75% 83%, #FDFEB4 2%, transparent 2%),
+        radial-gradient(circle at 79% 83%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 45% 13%, #FFFFD5 1.5%, transparent 1.5%),
+        radial-gradient(circle at 42% 13%, #FFFFD5 2%, transparent 2%),
+        radial-gradient(circle at 38% 14%, #FFFFD5 1.5%, transparent 1.5%),
+        radial-gradient(circle at 20% 24%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 21% 23%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 51% 13%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 81% 33%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 85% 36%, #FDFEB4 2%, transparent 2%),
+        radial-gradient(circle at 21% 46%, #FDFEB4 1%, transparent 1%),
+        radial-gradient(circle at 20% 51%, #FDFEB4 2%, transparent 2%),
+        radial-gradient(circle at 53% 51%, transparent 64%, #43A93E 64%),
+        radial-gradient(circle at 47% 59%, transparent 64%, #43843E 64%),
+        radial-gradient(circle at 47% 60%, transparent 59%, #1A9042 59%),
+        radial-gradient(circle at 50% 59%, transparent 55%, #1B863C 55%),
+        radial-gradient(circle at 45% 60%, transparent 55%, #399C49 55%),
+        radial-gradient(circle at 47% 60%, transparent 46%, #1A9042 46%),
+        radial-gradient(circle at 46% 55%, transparent 43%, #75B03B 43%),
+        radial-gradient(circle at 36% 55%, transparent 43%, #A9CB48 43%),
+        radial-gradient(circle at 50% 60%, transparent 40%, #66BA4F 40%),
+        radial-gradient(circle at 50% 53%, transparent 40%, #E5E051 37%),
+        radial-gradient(circle at 30% 48%, transparent 40%, #EAF157 37%),
+        radial-gradient(circle at 57% 69%, transparent 40%, #EAF157 40%),
+        radial-gradient(circle at 40% 88%, transparent 40%, #E9E072 37%),
+        radial-gradient(circle at 67% 54%, transparent 40%, #FAEB7B 37%),
+        radial-gradient(circle at 49% 35%, transparent 40%, #FFF8C5 37%),
+        radial-gradient(circle at 79% 59%, transparent 40%, #FFFE9C 37%),
+        radial-gradient(circle at 50% 50%, #FDFEB4 100%, #FDFEB4 100%);
+    }
+
+    .portal-ring::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border: 2px solid #FFF765;
+      border-radius: 50%;
+      animation: portal-rotate 8s linear infinite reverse;
+    }
+
+    @keyframes portal-rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .burp-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: #08BAE3;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #08BAE3;
+    }
+
+    .burp-indicator.active {
+      opacity: 1;
+      animation: burp-flash 0.5s ease-in-out;
+    }
+
+    @keyframes burp-flash {
+      0%, 100% { background: rgba(0, 0, 0, 0.7); }
+      50% { background: rgba(8, 186, 227, 0.2); }
+    }
+
+    .dimension-counter {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #FFF765;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #FFF765;
+      text-shadow: 0 0 8px #FFF765;
+    }
+  </style>
+</head>
+<body>
+  <div class="portal-ring"></div>
+  
+  <div class="dimension-counter">
+    Dimension: C-137
+  </div>
+  
+  <div class="burp-indicator" id="burpIndicator">
+    🫧 BURP DETECTED! 🫧
+  </div>
+
+  <div class="title">Rick's Interdimensional Cake</div>
+  <div class="subtitle">*burp* Science Birthday Experiment</div>
+  
+  <div class="rick-quote" id="rickQuote">
+    "Wubba lubba dub dub! Blow out the candles, Morty!"
+  </div>
+  
+  <div class="candle-count-display">
+    Portal Candles Active: <span id="candleCount">0</span>
+  </div>
+  
+  <div class="cake">
+    <div class="plate"></div>
+    <div class="layer layer-bottom"></div>
+    <div class="layer layer-middle"></div>
+    <div class="layer layer-top"></div>
+    <div class="icing"></div>
+    <div class="drip drip1"></div>
+    <div class="drip drip2"></div>
+    <div class="drip drip3"></div>
+    <div class="drip drip4"></div>
+    <div class="drip drip5"></div>
+    <div class="drip drip6"></div>
+    <div class="drip drip7"></div>
+    <div class="drip drip8"></div>
+  </div>
+
+  <div class="instructions">
+    🧪 Click the cake to add portal candles! 🧪<br>
+    💨 Blow into your microphone to extinguish them with science! 💨
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cake = document.querySelector(".cake");
+      const candleCountDisplay = document.getElementById("candleCount");
+      const burpIndicator = document.getElementById("burpIndicator");
+      const rickQuote = document.getElementById("rickQuote");
+      let candles = [];
+      let audioContext;
+      let analyser;
+      let microphone;
+
+      const rickQuotes = [
+        "Wubba lubba dub dub! Blow out the candles, Morty!",
+        "*burp* Science birthday, Morty! Make a wish!",
+        "These aren't regular candles, they're PORTAL candles!",
+        "Blow harder, Morty! Use your lungs for science!",
+        "*burp* Happy birthday from dimension C-137!",
+        "Time to extinguish some interdimensional flames!",
+        "Morty, this cake defies at least 3 laws of physics!",
+        "*burp* Birthday cake is just applied chemistry, Morty!"
+      ];
+
+      function updateCandleCount() {
+        const activeCandles = candles.filter(
+          (candle) => !candle.classList.contains("out")
+        ).length;
+        candleCountDisplay.textContent = activeCandles;
+        
+        if (activeCandles === 0 && candles.length > 0) {
+          rickQuote.textContent = "*burp* All candles extinguished! Science wins again!";
+          rickQuote.style.color = "#08BAE3";
+        }
+      }
+
+      function addCandle(left, top) {
+        const candle = document.createElement("div");
+        candle.className = "candle";
+        candle.style.left = left + "px";
+        candle.style.top = top + "px";
+
+        const flame = document.createElement("div");
+        flame.className = "flame";
+        candle.appendChild(flame);
+
+        cake.appendChild(candle);
+        candles.push(candle);
+        updateCandleCount();
+        
+        // Change Rick's quote when adding candles
+        if (candles.length === 1) {
+          rickQuote.textContent = rickQuotes[Math.floor(Math.random() * rickQuotes.length)];
+          rickQuote.style.color = "#FFF765";
+        }
+      }
+
+      // Function to get URL parameters
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        const results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      }
+
+      // Function to add candles automatically based on URL parameter
+      function addCandlesFromUrl() {
+        const candleCount = parseInt(candleCountFromUrl);
+        
+        if (hasUrlParameter && candleCount > 0) {
+          const cakeRect = cake.getBoundingClientRect();
+          const cakeWidth = cake.offsetWidth;
+          const cakeHeight = cake.offsetHeight;
+          
+          // Calculate spacing for candles
+          const maxCandlesPerRow = Math.floor(cakeWidth / 25); // 25px spacing between candles
+          const rows = Math.ceil(candleCount / maxCandlesPerRow);
+          
+          for (let i = 0; i < candleCount; i++) {
+            const row = Math.floor(i / maxCandlesPerRow);
+            const col = i % maxCandlesPerRow;
+            
+            // Calculate position with some randomness for natural look
+            const baseLeft = (cakeWidth / (maxCandlesPerRow + 1)) * (col + 1);
+            const baseTop = 20 + (row * 30); // Start from top of cake
+            
+            // Add some randomness to make it look more natural
+            const left = baseLeft + (Math.random() - 0.5) * 20;
+            const top = baseTop + (Math.random() - 0.5) * 10;
+            
+            // Ensure candles stay within cake bounds
+            const finalLeft = Math.max(10, Math.min(cakeWidth - 10, left));
+            const finalTop = Math.max(10, Math.min(60, top));
+            
+            addCandle(finalLeft, finalTop);
+          }
+          
+          // Set appropriate Rick quote for URL candles
+          rickQuote.textContent = `*burp* ${candleCount} portal candles activated! Science time!`;
+          rickQuote.style.color = "#FFF765";
+        }
+      }
+
+      // Check for URL parameter first
+      const candleCountFromUrl = getUrlParameter('candles');
+      const hasUrlParameter = candleCountFromUrl && !isNaN(parseInt(candleCountFromUrl)) && parseInt(candleCountFromUrl) > 0;
+      
+      // Manual candle addition on click (only if no valid URL parameter is provided)
+      if (!hasUrlParameter) {
+        cake.addEventListener("click", function (event) {
+          const rect = cake.getBoundingClientRect();
+          const left = event.clientX - rect.left;
+          const top = event.clientY - rect.top;
+          addCandle(left, top);
+        });
+      } else {
+        // Remove cursor pointer style when manual addition is disabled
+        cake.style.cursor = 'default';
+      }
+
+      function isBlowing() {
+        if (!analyser) return false;
+        
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
+
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          sum += dataArray[i];
+        }
+        let average = sum / bufferLength;
+
+        return average > 40;
+      }
+
+      function blowOutCandles() {
+        let blownOut = 0;
+
+        if (isBlowing()) {
+          // Show burp indicator
+          burpIndicator.classList.add("active");
+          setTimeout(() => {
+            burpIndicator.classList.remove("active");
+          }, 500);
+
+          candles.forEach((candle) => {
+            if (!candle.classList.contains("out") && Math.random() > 0.5) {
+              candle.classList.add("out");
+              blownOut++;
+            }
+          });
+        }
+
+        if (blownOut > 0) {
+          updateCandleCount();
+          
+          // Random Rick reactions to blowing out candles
+          const blowQuotes = [
+            "*burp* Nice work, Morty! Science in action!",
+            "That's how you extinguish interdimensional flames!",
+            "*burp* Portal candles don't stand a chance!",
+            "Excellent lung capacity, Morty!",
+            "Those candles got SCHWIFTY and went out!"
+          ];
+          
+          if (Math.random() > 0.7) { // 30% chance for reaction
+            rickQuote.textContent = blowQuotes[Math.floor(Math.random() * blowQuotes.length)];
+            rickQuote.style.color = "#08BAE3";
+          }
+        }
+      }
+
+      // Initialize microphone and audio analysis
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(function (stream) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            analyser.fftSize = 256;
+            setInterval(blowOutCandles, 200);
+          })
+          .catch(function (err) {
+            console.log("Unable to access microphone: " + err);
+            rickQuote.textContent = "*burp* Microphone access denied! Just click the candles to blow them out, Morty!";
+            rickQuote.style.color = "#ff1744";
+            
+            // Alternative: click to blow out candles if no microphone
+            cake.addEventListener("dblclick", function() {
+              candles.forEach((candle) => {
+                if (!candle.classList.contains("out") && Math.random() > 0.3) {
+                  candle.classList.add("out");
+                }
+              });
+              updateCandleCount();
+            });
+          });
+      } else {
+        console.log("getUserMedia not supported on your browser!");
+        rickQuote.textContent = "*burp* Your browser is from a primitive dimension! Double-click to blow out candles!";
+        rickQuote.style.color = "#ff1744";
+        
+        // Alternative: click to blow out candles
+        cake.addEventListener("dblclick", function() {
+          candles.forEach((candle) => {
+            if (!candle.classList.contains("out") && Math.random() > 0.3) {
+              candle.classList.add("out");
+            }
+          });
+          updateCandleCount();
+        });
+      }
+
+      // Add candles from URL parameter when page loads
+      addCandlesFromUrl();
+
+      // Cycle through quotes periodically
+      setInterval(() => {
+        if (candles.length > 0 && candles.some(candle => !candle.classList.contains("out"))) {
+          if (Math.random() > 0.8) { // 20% chance every 5 seconds
+            rickQuote.textContent = rickQuotes[Math.floor(Math.random() * rickQuotes.length)];
+            rickQuote.style.color = "#FFF765";
+          }
+        }
+      }, 5000);
+    });
+  </script>
+</body>
 </html>
