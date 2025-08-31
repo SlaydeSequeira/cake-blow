@@ -514,7 +514,7 @@
     🫧 BURP DETECTED! 🫧
   </div>
 
-  <div class="title">Rick's Interdimensional Cake</div>
+  <div class="title" id="title">Rick's Interdimensional Cake</div>
   <div class="subtitle">*burp* Science Birthday Experiment</div>
   
   <div class="rick-quote" id="rickQuote">
@@ -609,8 +609,8 @@
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
       }
 
-      // Function to add candles automatically based on URL parameter
-      function addCandlesFromUrl() {
+// Function to add candles automatically based on URL parameter
+function addCandlesFromUrl() {
         const candleCount = parseInt(candleCountFromUrl);
         
         if (hasUrlParameter && candleCount > 0) {
@@ -644,6 +644,41 @@
           // Set appropriate Rick quote for URL candles
           rickQuote.textContent = `*burp* ${candleCount} portal candles activated! Science time!`;
           rickQuote.style.color = "#FFF765";
+        }
+      }
+      function replaceName() {
+        const name = getUrlParameter('name');
+        const title = document.getElementById('title');
+        title.textContent = `${name}'s Interdimensional Cake`;
+      }
+      // Function to replace portal ring with custom image
+      function replacePortalRing() {
+        const imageUrl = getUrlParameter('bg_image');
+        const portalRing = document.querySelector('.portal-ring');
+        
+        if (imageUrl && portalRing) {
+          // Create new image element
+          const customImage = document.createElement('div');
+          customImage.style.position = 'absolute';
+          customImage.style.top = '50%';
+          customImage.style.left = '50%';
+          customImage.style.transform = 'translate(-50%, -50%)';
+          customImage.style.width = '500px';
+          customImage.style.height = '500px';
+          customImage.style.backgroundImage = `url(${imageUrl})`;
+          customImage.style.backgroundSize = 'cover';
+          customImage.style.backgroundPosition = 'center';
+          customImage.style.backgroundRepeat = 'no-repeat';
+          customImage.style.borderRadius = '50%';
+          customImage.style.opacity = '0.3';
+          customImage.style.pointerEvents = 'none';
+          customImage.style.animation = 'portal-rotate 10s linear infinite';
+          customImage.style.border = '2px solid #08BAE3';
+          customImage.style.boxShadow = '0px 0px 40px 10px rgba(8, 186, 227, 0.3)';
+          customImage.className = 'custom-portal-ring';
+          
+          // Replace the portal ring
+          portalRing.parentNode.replaceChild(customImage, portalRing);
         }
       }
 
@@ -762,7 +797,8 @@
 
       // Add candles from URL parameter when page loads
       addCandlesFromUrl();
-
+      replaceName();
+      replacePortalRing();
       // Cycle through quotes periodically
       setInterval(() => {
         if (candles.length > 0 && candles.some(candle => !candle.classList.contains("out"))) {
